@@ -1,0 +1,52 @@
+{
+  "model_type": "solace",
+  "architectures": ["SolaceForCausalLM"],
+  "variant": "claude-solace-mid",
+  "description": "Mid-tier Claude Solace. Roughly half the parameter count of the HF flagship, sized so the BF16 checkpoint plus a 64k-context KV cache fits under a 24 GB RAM cap. Same hybrid Gemma-4 + GPT-OSS architecture as the other variants.",
+
+  "hidden_size": 4096,
+  "num_hidden_layers": 32,
+  "num_attention_heads": 32,
+  "num_key_value_heads": 8,
+  "head_dim": 128,
+  "intermediate_size": 11008,
+
+  "vocab_size": 262144,
+  "max_position_embeddings": 65536,
+
+  "hidden_act": "gelu_pytorch_tanh",
+  "mlp_type": "geglu",
+  "rms_norm_eps": 1e-6,
+  "use_qk_norm": true,
+  "use_pre_post_norm_sandwich": true,
+
+  "attention_pattern": ["local", "local", "local", "local", "local", "global"],
+  "sliding_window": 4096,
+  "rope_theta_local": 10000.0,
+  "rope_theta_global": 1000000.0,
+  "rope_scaling": null,
+
+  "attention_sinks": 4,
+  "final_logit_softcapping": null,
+  "attn_logit_softcapping": null,
+
+  "initializer_range": 0.02,
+  "tie_word_embeddings": true,
+  "attention_bias": false,
+  "mlp_bias": false,
+  "attention_dropout": 0.0,
+
+  "bos_token_id": 2,
+  "eos_token_id": 1,
+  "pad_token_id": 0,
+
+  "torch_dtype": "bfloat16",
+  "deployment": {
+    "target_ram_gb": 24,
+    "recommended_quantization": "bf16",
+    "approx_parameters": 6730000000,
+    "approx_weight_bytes_bf16": 13460000000,
+    "approx_weight_bytes_int8": 6730000000,
+    "notes": "Primary HF artifact is BF16 safetensors. At 8k ctx total runtime memory is ~15 GB; at 64k ctx ~18-19 GB thanks to sliding-window KV bounding. An INT8 (bitsandbytes) companion is recommended for the 16 GB user who wants to step up."
+  }
+}
