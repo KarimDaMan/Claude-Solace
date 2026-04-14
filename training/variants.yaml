@@ -1,0 +1,63 @@
+# Base-model mapping for Claude Solace post-training.
+#
+# Instead of from-scratch pretraining (infeasibly expensive), each Solace
+# variant starts from a free open-weights pre-trained base whose architecture
+# is close to what ``configs/solace_*.json`` describes. Post-training = SFT
+# on 2024-2025 instruction data + DPO on 2024-2025 preference data.
+#
+# All three bases are free to download; license terms differ:
+#   * Qwen 2.5          -> Apache 2.0 (most permissive)
+#   * Gemma 3           -> Gemma Terms of Use (commercial OK, some restrictions)
+
+local:
+  variant_config: configs/solace_local.json
+  base_model: google/gemma-3-4b-pt           # 4.3B params, Gemma-3 arch
+  base_license: gemma-terms
+  base_cutoff: "2024-08"                     # approx Gemma 3 data cutoff
+  dtype: bfloat16
+  # QLoRA: base frozen in 4-bit NF4, LoRA adapters trained in bf16.
+  peft:
+    method: qlora
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  # Fits a Colab free T4 (16 GB VRAM) at seq_len=2048.
+  hardware_hint: "1x T4 16GB (Colab free) or better"
+  export:
+    merge_adapters: true
+    formats: [safetensors-bf16, gguf-q4_k_m]
+
+mid:
+  variant_config: configs/solace_mid.json
+  base_model: Qwen/Qwen2.5-7B                # 7.6B params, Apache 2.0
+  base_license: apache-2.0
+  base_cutoff: "2024-10"
+  dtype: bfloat16
+  peft:
+    method: lora
+    r: 32
+    alpha: 64
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  hardware_hint: "1x A100 40GB or 2x A10/L4"
+  export:
+    merge_adapters: true
+    formats: [safetensors-bf16, gguf-q5_k_m]
+
+hf:
+  variant_config: configs/solace_hf.json
+  base_model: google/gemma-3-12b-pt          # 11.8B params, Gemma-3 arch
+  base_license: gemma-terms
+  base_cutoff: "2024-08"
+  dtype: bfloat16
+  peft:
+    method: lora
+    r: 64
+    alpha: 128
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  hardware_hint: "1x H100 80GB or 2x A100 40GB"
+  export:
+    merge_adapters: true
+    formats: [safetensors-bf16, gguf-q5_k_m]

@@ -1,0 +1,22 @@
+# Post-training stack for Claude Solace.
+# Pinned to versions known to work together as of early 2026.
+
+torch>=2.4,<3.0
+transformers>=4.46,<5.0
+accelerate>=1.0,<2.0
+datasets>=3.0,<4.0
+peft>=0.13,<1.0
+trl>=0.12,<1.0
+bitsandbytes>=0.44         # 4-bit NF4 for QLoRA
+sentencepiece>=0.2
+protobuf>=4.25
+safetensors>=0.4
+pyyaml>=6.0
+einops>=0.8
+tqdm>=4.66
+
+# Evaluation
+lm-eval>=0.4.5             # EleutherAI lm-evaluation-harness
+
+# Optional: export to GGUF (install separately; requires llama.cpp checkout)
+# See scripts/export.py for the convert-hf-to-gguf.py invocation.
