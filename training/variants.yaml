@@ -61,3 +61,24 @@ hf:
   export:
     merge_adapters: true
     formats: [safetensors-bf16, gguf-q5_k_m]
+
+high:
+  variant_config: configs/solace_high.json
+  # The architectural spec is ~18.8B; the closest free open base is
+  # Gemma 3 27B, which we fine-tune and deploy in bnb-int8 so the merged
+  # model (27 GB weights + KV + activations) lands in the 48 GB cap.
+  base_model: google/gemma-3-27b-pt          # 27B params, Gemma-3 arch
+  base_license: gemma-terms
+  base_cutoff: "2024-08"
+  dtype: bfloat16
+  peft:
+    method: lora
+    r: 64
+    alpha: 128
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  hardware_hint: "1x H100 80GB for training; 2x 24 GB consumer GPUs or 1x A6000 48GB / Mac M3 Max 64GB for inference"
+  export:
+    merge_adapters: true
+    # BF16 shipped for completeness; INT8 is the recommended runtime for the 48 GB target.
+    formats: [safetensors-bf16, safetensors-int8, gguf-q5_k_m, gguf-q4_k_m]

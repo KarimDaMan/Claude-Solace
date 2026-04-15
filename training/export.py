@@ -101,7 +101,7 @@ def export_gguf(bf16_dir: Path, out: Path, quant: str, llama_cpp: Path | None) -
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf"])
+    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf", "high"])
     ap.add_argument("--adapters", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--llama-cpp", type=Path, default=None,

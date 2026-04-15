@@ -61,7 +61,7 @@ def build_policy(variant: dict, sft_adapters: Path):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf"])
+    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf", "high"])
     ap.add_argument("--sft", type=Path, required=True,
                     help="Path to SFT-trained LoRA adapters.")
     ap.add_argument("--data", type=Path, required=True,

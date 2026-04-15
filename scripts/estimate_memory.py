@@ -51,7 +51,7 @@ def main() -> int:
     rows = []
     failed = False
 
-    for name in ("local", "mid", "hf"):
+    for name in ("local", "mid", "hf", "high"):
         config, deploy = load_variant(name)
         quant = deploy.get("recommended_quantization", "bf16")
         weight_bytes_per_param = QUANT_BYTES_PER_PARAM.get(quant, 2.0)

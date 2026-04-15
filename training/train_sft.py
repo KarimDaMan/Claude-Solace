@@ -87,7 +87,7 @@ def build_model_and_tokenizer(variant: dict):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf"])
+    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf", "high"])
     ap.add_argument("--data", type=Path, required=True, help="output of prepare_data.py --stage sft")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--epochs", type=float, default=2.0)

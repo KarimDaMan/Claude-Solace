@@ -47,7 +47,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", type=Path, required=True,
                     help="HF-format model dir (output of export.py).")
-    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf"])
+    ap.add_argument("--variant", required=True, choices=["local", "mid", "hf", "high"])
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--tasks", choices=list(TASK_SETS), default="quick")
     ap.add_argument("--batch-size", default="auto")

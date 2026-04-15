@@ -79,7 +79,7 @@ def main() -> int:
     rows = []
     failed = False
 
-    for name in ("local", "mid", "hf"):
+    for name in ("local", "mid", "hf", "high"):
         cfg = json.loads((repo / "configs" / f"solace_{name}.json").read_text())
         deploy = cfg.get("deployment", {})
         quant = deploy.get("recommended_quantization", "bf16")
